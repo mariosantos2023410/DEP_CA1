@@ -25,7 +25,6 @@ glimpse(covid_dataset)
 mv <- colSums(is.na(covid_dataset))
 mv
 
-
 #This is to calculate the percentage of missing values for one of the each colums from the data set
 #As the percentage of "note" column is 100% the column will be removed from the data set
 mv_percentage <- colMeans(is.na(covid_dataset)) *100
@@ -52,7 +51,6 @@ covid_New$country_code <- ifelse(is.na(covid_New$country_code), mode(covid_New$c
 covid_New$weekly_count <- ifelse(is.na(covid_New$weekly_count), mean(covid_New$weekly_count, na.rm = TRUE), covid_New$weekly_count)
 covid_New$rate_14_day <- ifelse(is.na(covid_New$rate_14_day), mean(covid_New$rate_14_day, na.rm = TRUE), covid_New$rate_14_day)
 covid_New$cumulative_count <- ifelse(is.na(covid_New$cumulative_count), mean(covid_New$cumulative_count, na.rm = TRUE), covid_New$cumulative_count)
-
 
 #This is to check the missing values after handling and treating them.
 mv <- colSums(is.na(covid_New))
@@ -127,36 +125,6 @@ hist(covid_New$cumulative_count)
 calc_sd <- sd(covid_New$cumulative_count)
 print(cal_sd)
 
-# This is to import the library
-install.packages("caret")
-#This is to load the library
-library(caret)
-# This is to select the respectively columns of the data set
-num_cols <- c("population", "rate_14_day", "cumulative_count", "weekly_count")
-# This is to apply Min-Max Scaling
-covid_New[num_cols] <- sapply(covid_New[num_cols], function(x) ifelse((x), 0.5, (x - min(x)) / (max(x) - min(x))))
-# This is to view the head of the normalized data
-view(covid_New)
-
-# This is to select the respectively columns of the data set
-num_cols <- c("population", "rate_14_day", "cumulative_count", "weekly_count")
-# This is to find the Mean and Standard Deviation for each column
-mean_values <- colMeans(covid_New[num_cols])
-sd_values <- apply(covid_New[num_cols], 2, sd)
-# This is to apply z-score Standardization
-covid_New[num_cols] <- scale(covid_New[num_cols], center = mean_values, scale = sd_values)
-# This is to view the standardized data
-view(covid_New)
-
-# This is the Robust Scalar Calculation
-# This is extracting numerical columns
-num_cols <- c("population", "rate_14_day", "cumulative_count", "weekly_count")
-# This is to apply the method Robust Scaling
-pp_params <- preProcess(covid_New[num_cols], method = c("center", "scale"))
-# This is to apply the learned parameters to the original data
-covid_New_robust <- predict(pp_params, newdata = covid_New[num_cols])
-# This is to view the head of the Robust Scaled data
-view(covid_New_robust)
 
 #This is a scatter Plot for the correlation of Weekly Count Vs Rate 14 Day in Ireland
 # This is to filter data for Ireland
@@ -197,3 +165,54 @@ corr_mat <- cor(covid_New[, c('population', 'weekly_count', 'rate_14_day', 'cumu
 # This is to visualize the correlation matrix with a heat map
 library(corrplot)
 corrplot(corr_mat, method = "color", type = "upper", tl.col = "black", tl.srt = 45)
+
+# This is to import the library
+install.packages("caret")
+#This is to load the library
+library(caret)
+# This is to select the respectively columns of the data set
+num_cols <- c("population", "rate_14_day", "cumulative_count", "weekly_count")
+# This is to apply Min-Max Scaling
+covid_New[num_cols] <- sapply(covid_New[num_cols], function(x) ifelse((x), 0.5, (x - min(x)) / (max(x) - min(x))))
+# This is to view the head of the normalized data
+View(covid_New)
+
+# This is to select the respectively columns of the data set
+num_cols <- c("population", "rate_14_day", "cumulative_count", "weekly_count")
+# This is to find the Mean and Standard Deviation for each column
+mean_values <- colMeans(covid_New[num_cols])
+sd_values <- apply(covid_New[num_cols], 2, sd)
+# This is to apply z-score Standardization
+covid_New[num_cols] <- scale(covid_New[num_cols], center = mean_values, scale = sd_values)
+# This is to view the standardized data
+View(covid_New)
+
+# This is the Robust Scalar Calculation
+# This is extracting numerical columns
+num_cols <- c("population", "rate_14_day", "cumulative_count", "weekly_count")
+# This is to apply the method Robust Scaling
+pp_params <- preProcess(covid_New[num_cols], method = c("center", "scale"))
+# This is to apply the learned parameters to the original data
+covid_New_robust <- predict(pp_params, newdata = covid_New[num_cols])
+# This is to view the head of the Robust Scaled data
+View(covid_New_robust)
+
+
+#This is an application of Dummy Encoding in one of the categorical variables of data set
+# Load the necessary library
+
+# This is to install the package
+install.packages("fastDummies")
+
+# Load the library
+library(fastDummies)
+
+# Country code is the categorical variable for dummy encoding
+cat_cols <- c("country_code")
+
+# This is to apply one-hot encoding
+covid_New_enc <- dummy_cols(covid_New, select_columns = cat_cols)
+
+# This is to view the encoded dataset
+head(covid_New_enc)
+
