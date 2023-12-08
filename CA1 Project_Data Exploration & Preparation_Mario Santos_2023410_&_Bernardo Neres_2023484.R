@@ -74,7 +74,7 @@ variable_types <- data.frame(
 #This is to create a bar plot to visualize variable types
 ggplot(variable_types, aes(x = Variable, fill = Type)) +
   geom_bar(position = "dodge", stat = "count") +
-  labs(title = "Variable Types Bar Plot",
+  labs(title = "Variable Types",
        x = "Variable",
        y = "Count",
        fill = "Type") +
@@ -175,7 +175,8 @@ num_cols <- c("population", "rate_14_day", "cumulative_count", "weekly_count")
 # This is to apply Min-Max Scaling
 covid_New[num_cols] <- sapply(covid_New[num_cols], function(x) ifelse((x), 0.5, (x - min(x)) / (max(x) - min(x))))
 # This is to view the head of the normalized data
-View(covid_New)
+head(covid_New)
+
 
 # This is to select the respectively columns of the data set
 num_cols <- c("population", "rate_14_day", "cumulative_count", "weekly_count")
@@ -185,7 +186,8 @@ sd_values <- apply(covid_New[num_cols], 2, sd)
 # This is to apply z-score Standardization
 covid_New[num_cols] <- scale(covid_New[num_cols], center = mean_values, scale = sd_values)
 # This is to view the standardized data
-View(covid_New)
+head(covid_New)
+
 
 # This is the Robust Scalar Calculation
 # This is extracting numerical columns
@@ -195,8 +197,7 @@ pp_params <- preProcess(covid_New[num_cols], method = c("center", "scale"))
 # This is to apply the learned parameters to the original data
 covid_New_robust <- predict(pp_params, newdata = covid_New[num_cols])
 # This is to view the head of the Robust Scaled data
-View(covid_New_robust)
-
+head(covid_New_robust)
 
 #This is an application of Dummy Encoding in one of the categorical variables of data set
 # Load the necessary library
