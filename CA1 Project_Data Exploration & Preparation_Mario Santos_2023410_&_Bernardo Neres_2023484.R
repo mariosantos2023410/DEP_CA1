@@ -216,3 +216,31 @@ covid_New_enc <- dummy_cols(covid_New, select_columns = cat_cols)
 # This is to view the encoded dataset
 head(covid_New_enc)
 
+
+#This is to Apply Principal Component Analysis to this dataset
+#Numerical Columns are selected for PCA
+num_cols <- c("population", "weekly_count", "rate_14_day", "cumulative_count")
+dt_pca <- covid_New_enc[, num_cols]
+
+# Check for missing values
+mv <- any(is.na(dt_pca))
+
+if (mv) {
+  # Handle missing values 
+  # Replacing the missing values with column means
+  dt_pca[is.na(dt_pca)] <- colMeans(dt_pca, na.rm = TRUE)
+}
+
+#This is the Data standardization
+scaled_dt <- scale(dt_pca)
+
+# Three components applied to run PCA
+num_comp <- 3
+pca_res <- prcomp(scaled_data, center = TRUE, scale. = TRUE, rank. = num_comp)
+
+# This is to extract the principal components
+pp_comp <- pca_res$x
+
+# To run the results
+summary(pca_res)
+View(pca_res)
