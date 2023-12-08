@@ -244,3 +244,36 @@ pp_comp <- pca_res$x
 # To run the results
 summary(pca_res)
 View(pca_res)
+
+# This is to create a dataframe with Team Members and Spent Hours during the Project
+Team_Member <- data.frame(
+  Team_Member = c("Mario", "Bernardo"),
+  Spent_Hours = c(31, 23)
+)
+
+# This will generate a bar chart with the details
+barplot(
+  height = Team_Member$Spent_Hours, 
+  names.arg = Team_Member$Team_Member,
+  col = c("blue", "green"), 
+  main = "Effort and Time Spent during This Project",
+  xlab = "Team Members", 
+  ylab = "Hours Spent", 
+  ylim = c(0, max(Team_Member$Spent_Hours) + 5)
+)
+
+# These are the labels
+text(
+  x = barplot(
+    height = Team_Member$Spent_Hours, 
+    col = c("blue", "green"), 
+    add = TRUE
+  ) + 0.25,
+  y = Team_Member$Spent_Hours + 1,
+  labels = Team_Member$Spent_Hours,
+  col = "black",
+  pos = 3  
+)
+
+# These are the legends
+legend("topright", legend = Team_Member$Team_Member, fill = c("blue", "green"), inset = 0.02)
